@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article article-type="research-article" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">Antimicrob Agents Chemother</journal-id>
+      <journal-title-group><journal-title>Antimicrobial Agents and Chemotherapy Reports</journal-title></journal-title-group>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="pmc">PMC_sample_006</article-id>
+      <article-id pub-id-type="pmid">30000006</article-id>
+      <title-group>
+        <article-title>Emergence of Carbapenem-Resistant Klebsiella pneumoniae in Intensive Care Units: A Multicenter Surveillance Study</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author"><name><surname>Silva</surname><given-names>R.</given-names></name></contrib>
+        <contrib contrib-type="author"><name><surname>Kowalski</surname><given-names>T.</given-names></name></contrib>
+      </contrib-group>
+      <pub-date pub-type="epub"><year>2022</year></pub-date>
+      <abstract>
+        <p>Carbapenem-resistant Klebsiella pneumoniae (CRKP) is an urgent public health threat associated with high mortality in critically ill patients and limited remaining treatment options. We conducted a five-year surveillance study across 14 intensive care units (ICUs) to characterize the incidence, risk factors, and outcomes of CRKP bloodstream infection. Among 3,240 ICU admissions with a positive blood culture, CRKP accounted for 6.8% of Klebsiella pneumoniae isolates in year one, rising to 19.3% by year five (p &lt; 0.001 for trend). Prior carbapenem exposure, mechanical ventilation, and prolonged ICU stay were independently associated with CRKP acquisition. Thirty-day mortality was significantly higher for CRKP bloodstream infection (42%) than for carbapenem-susceptible infection (19%, p &lt; 0.001).</p>
+      </abstract>
+      <kwd-group>
+        <kwd>antibiotic resistance</kwd>
+        <kwd>Klebsiella pneumoniae</kwd>
+        <kwd>carbapenem resistance</kwd>
+        <kwd>intensive care unit</kwd>
+        <kwd>bloodstream infection</kwd>
+      </kwd-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec>
+      <title>Introduction</title>
+      <p>Carbapenem-resistant Enterobacteriaceae, particularly Klebsiella pneumoniae, have been designated an urgent antimicrobial resistance threat by public health authorities worldwide. Infections caused by these organisms are associated with substantially higher mortality than infections from susceptible strains, largely because of delayed appropriate therapy and a shrinking arsenal of effective antibiotics. Understanding trends in incidence and modifiable risk factors within high-risk settings such as intensive care units is essential for guiding infection control and antimicrobial stewardship policy.</p>
+    </sec>
+    <sec>
+      <title>Methods</title>
+      <p>We performed a retrospective, multicenter surveillance study across 14 intensive care units over a five-year period, capturing all blood culture isolates identified as Klebsiella pneumoniae. Carbapenem resistance was defined per standard clinical laboratory breakpoints. Risk factor analysis used multivariable logistic regression adjusting for age, comorbidity burden, prior antibiotic exposure, mechanical ventilation status, and length of ICU stay prior to culture collection. Thirty-day all-cause mortality was compared between CRKP and carbapenem-susceptible bloodstream infection using Kaplan-Meier analysis and Cox proportional hazards modeling.</p>
+    </sec>
+    <sec>
+      <title>Results</title>
+      <p>Among 3,240 ICU admissions with a positive blood culture for Klebsiella pneumoniae, the proportion classified as carbapenem-resistant rose from 6.8% in year one of surveillance to 19.3% in year five (p &lt; 0.001 for trend). In multivariable analysis, prior carbapenem exposure (adjusted OR 3.4), mechanical ventilation (adjusted OR 2.1), and ICU stay exceeding 14 days before culture (adjusted OR 2.8) were independently associated with CRKP acquisition. Thirty-day mortality was 42% among patients with CRKP bloodstream infection compared with 19% among those with carbapenem-susceptible infection (adjusted HR 2.2, p &lt; 0.001).</p>
+    </sec>
+    <sec>
+      <title>Discussion</title>
+      <p>The near tripling of CRKP prevalence over five years, combined with markedly elevated associated mortality, underscores the urgency of strengthening antimicrobial stewardship and infection control practices in intensive care settings. Restricting unnecessary carbapenem use and minimizing prolonged ICU stays where clinically feasible may help curb further spread. Continued multicenter surveillance is essential to track emerging resistance trends and evaluate the impact of stewardship interventions.</p>
+    </sec>
+  </body>
+</article>

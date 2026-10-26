@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XML 文件檢索系統</title>
+<meta name="description" content="可上傳任意XML文件建立索引的檢索系統展示。">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-top">
+      <span class="masthead-kicker">人工智慧資訊擷取技術</span>
+      <a class="masthead-repo" href="https://github.com/deer140652/ir-term-weighting" id="repo-link" target="_blank" rel="noopener">原始碼（GitHub）↗</a>
+    </div>
+    <h1>XML 文件檢索系統</h1>
+  </div>
+</header>
+
+<nav class="section-nav" aria-label="頁面區塊">
+  <div class="section-nav-inner">
+    <a href="#search-top">文件檢索</a>
+    <a href="#weight-section">權重實驗</a>
+    <a href="#zipf-section">詞頻分析</a>
+    <a href="#w2v-section">Word2Vec</a>
+    <a href="#ed-section">編輯距離 × 拼字校正</a>
+    <a href="#analyzer">斷句工具</a>
+  </div>
+</nav>
+
+<main class="layout" id="search-top">
+
+  <aside class="info-sidebar">
+    <section class="card">
+      <h2>語料庫總覽</h2>
+      <div class="stat-grid">
+        <div class="stat-block"><strong id="stat-docs">–</strong><span>文獻數</span></div>
+        <div class="stat-block"><strong id="stat-words">–</strong><span>總字數</span></div>
+        <div class="stat-block"><strong id="stat-sentences">–</strong><span>總句數</span></div>
+        <div class="stat-block" title="檢索索引中的詞幹數：依目前的搜尋範圍（摘要，或勾選「搜尋包含標題」時為標題＋摘要），不含數字與單一字母，連字號複合詞另外拆出各部分。與「詞頻分析」的詞彙量計算規則不同。"><strong id="stat-vocab">–</strong><span>索引詞數 ⓘ</span></div>
+      </div>
+      <button id="doc-stats-open" class="open-modal-btn" type="button" disabled>查看各文獻字數與句數 →</button>
+    </section>
+
+    <section class="card">
+      <details class="how-details">
+        <summary><h2>系統功能與方法</h2><span class="how-toggle" aria-hidden="true"></span></summary>
+        <h3 class="how-sub">檢索流程</h3>
+        <ol class="how-list">
+          <li><strong>文件擷取：</strong>預設載入 1,000 篇 GLP-1 相關 PubMed 摘要。可匯入 PubMed 摘要匯出檔（.txt）、上傳 XML，或透過 PMID／PMCID 取得文獻；自動辨識 PubMed／JATS 格式，擷取標題、作者與摘要，並略過沒有摘要的紀錄。</li>
+          <li><strong>句子分割：</strong>採規則式斷句切分文本，正確處理縮寫與小數點，避免誤判句尾。</li>
+          <li><strong>文字正規化：</strong>統一大小寫、移除停用詞，並使用 Porter 詞幹還原；數字與單一字母不列入檢索索引。連字號複合詞同時保留完整詞形與拆分詞，提升搜尋涵蓋率。</li>
+          <li><strong>索引建置：</strong>建立「摘要」與「標題＋摘要」兩套加權反向索引，依「包含標題」選項切換。文件新增後，瀏覽器即時重建索引。</li>
+          <li><strong>向量檢索：</strong>文件與查詢以相同的權重方法轉成向量，以餘弦相似度（或不正規化時的內積）排序，並支援 * 前綴搜尋。權重可切換 Raw TF、Log TF、Binary × 不用 IDF、ln(N/df)、ln(N/df)+1 × L2 正規化與否。</li>
+        </ol>
+        <h3 class="how-sub">進階功能</h3>
+        <ol class="how-list" start="6">
+          <li><strong>拼字校正：</strong>查詢詞不在語料詞彙中時，以動態規劃計算編輯距離（允許相鄰字元交換），自動改用語料中距離最近、出現最頻繁的字。</li>
+          <li><strong>模糊比對：</strong>開啟後，每個查詢詞幹也會比對索引中編輯距離 ≤ k 的詞幹，權重乘上 1/(1+距離)。</li>
+          <li><strong>命中位置：</strong>每筆結果列出關鍵字出現在第幾句（S）、句中第幾個字（W），並區分完全比對與部分比對。</li>
+          <li><strong>詞頻分析：</strong>以四種前處理條件計算 CF、DF、IDF，繪製 Zipf 分佈並以 log–log 迴歸估計 Zipf exponent；依 DF 與 CF 門檻將詞彙分為高、中、低頻三段，檢驗各段與 Zipf 直線的符合程度。</li>
+          <li><strong>詞嵌入：</strong>以 Word2Vec（Skip-gram／CBOW）訓練詞向量，內建以預設語料預先訓練的模型，可查詢語意最相近的詞。</li>
+        </ol>
+      </details>
+    </section>
+  </aside>
+
+  <section class="search-panel">
+    <form id="search-form" class="search-form" role="search">
+      <label for="search-input" class="sr-only">搜尋語料庫</label>
+      <input id="search-input" type="text" placeholder="輸入關鍵字開始搜尋…" autocomplete="off">
+      <button type="submit">搜尋</button>
+    </form>
+    <div class="search-options-row">
+      <p class="wildcard-hint">提示：字尾加 <code>*</code> 可進行前綴搜尋</p>
+      <div class="toggle-group">
+      <label class="include-title-toggle">
+        <input type="checkbox" id="spell-toggle" checked>
+        拼字校正
+        <span class="info-icon" tabindex="0" title="查詢詞不在語料詞彙中時，用編輯距離找最接近的字自動校正。">ⓘ</span>
+      </label>
+      <label class="include-title-toggle">
+        <input type="checkbox" id="fuzzy-toggle">
+        模糊比對
+        <span class="info-icon" tabindex="0" title="每個查詢詞幹也會比對編輯距離 ≤ k 的索引詞幹（4–7 字元 k=1，8 字元以上 k=2）。">ⓘ</span>
+      </label>
+      <label class="include-title-toggle">
+        <input type="checkbox" id="include-title-toggle">
+        搜尋包含標題
+        <span class="info-icon" tabindex="0" title="勾選後，相關度、反白、命中數都會一併計入標題；不勾選則只計算摘要。">ⓘ</span>
+      </label>
+      </div>
+    </div>
+    <div class="weighting-row" role="group" aria-label="權重方法">
+      <span class="weighting-label">權重方法</span>
+      <label>預設組合
+        <select id="w-preset"></select></label>
+      <label>TF
+        <select id="w-tf">
+          <option value="raw">Raw TF：tf</option>
+          <option value="log">Log TF：1 + ln(tf)</option>
+          <option value="binary">Binary：有出現 = 1</option>
+        </select></label>
+      <label>IDF
+        <select id="w-idf">
+          <option value="none">不使用</option>
+          <option value="classic">ln(N/df)</option>
+          <option value="smooth">ln(N/df) + 1</option>
+        </select></label>
+      <label>正規化
+        <select id="w-norm">
+          <option value="l2">L2（cosine）</option>
+          <option value="none">不正規化（內積）</option>
+        </select></label>
+      <button id="w-reset" class="link-btn inline" type="button">恢復預設</button>
+      <p id="w-formula" class="weighting-formula"></p>
+    </div>
+    <div class="example-chips" id="example-chips-wrap">
+      <span class="example-label">語料庫目前是空的 → 請先在右側「上傳 XML 文件」加入資料，再回來搜尋。</span>
+    </div>
+    <div id="search-notes" class="search-notes" aria-live="polite" hidden></div>
+    <p id="result-count" class="result-count" aria-live="polite"></p>
+    <div id="results" class="results" aria-live="polite"></div>
+  </section>
+
+  <aside class="sidebar">
+    <section class="card upload-card">
+      <h2>目前語料</h2>
+      <p id="corpus-summary" class="corpus-summary"></p>
+      <button id="manage-open" class="open-modal-btn" type="button">管理文獻（刪除／恢復預設）→</button>
+    </section>
+
+    <section class="card upload-card">
+      <h2>用 PMID / PMC 或 PubMed 摘要清單加入文獻</h2>
+      <!--p class="upload-note">支援三種 .txt 格式，系統會自動判斷：① PubMed 網站「Save → Format: Abstract」另存的摘要清單——標題、作者、摘要都已經在檔案裡，<strong>不需要網路連線</strong>，直接解析加入；② 純 PMID 數字清單、或 PMC 編號清單（例如 PMC11534501，可以混在同一份清單裡）——這種會自動連到 PubMed／PMC 抓取，若直接連線被擋，系統會自動改走備援轉發服務再試一次；如果還是失敗，可改用 <code>scripts/fetch_by_pmid_list.py</code> 在本機下載後，再用上面「上傳 XML 文件」加入。</p-->
+      <div id="pmid-dropzone" class="upload-dropzone" tabindex="0" role="button" aria-label="選擇或拖曳 TXT 檔">
+        <span class="upload-dropzone-icon">⇪</span>
+        <span>拖曳 .txt 檔案到這裡，或點擊選擇檔案</span>
+      </div>
+      <input type="file" id="pmid-upload-input" accept=".txt" hidden>
+      <div id="pmid-preview" class="pmid-preview" hidden>
+        <p id="pmid-preview-count" class="upload-count"></p>
+        <button id="pmid-fetch-start" class="ghost-btn-light" type="button">開始抓取</button>
+      </div>
+      <p id="pmid-status" class="upload-status" aria-live="polite"></p>
+    </section>
+
+    <section class="card upload-card">
+      <h2>上傳 XML 文件</h2>
+      <!--p class="upload-note">支援任意 XML 檔案——偵測到期刊文章格式（title / abstract / body）會顯示完整結構，否則會直接索引整份文件的文字內容。檔案只會在你的瀏覽器裡被解析、建立索引——不會上傳到任何伺服器，也不需要資料庫。</p-->
+      <div id="upload-dropzone" class="upload-dropzone" tabindex="0" role="button" aria-label="選擇或拖曳 XML 檔案">
+        <span class="upload-dropzone-icon">⇪</span>
+        <span>拖曳 .xml / .nxml 檔案到這裡，或點擊選擇檔案</span>
+      </div>
+      <input type="file" id="xml-upload-input" accept=".xml,.nxml" multiple hidden>
+      <p id="upload-status" class="upload-status" aria-live="polite"></p>
+    </section>
+  </aside>
+
+</main>
+
+<!-- ============================ 權重實驗（作業三） ============================ -->
+<section class="lab-section alt" id="weight-section">
+  <div class="lab-inner">
+    <div class="lab-head">
+      <span class="lab-kicker">Term Weighting 實驗</span>
+      <h2>權重方法與檢索評估</h2>
+      <p class="lab-intro">權重由三個彼此獨立的部分組成：<strong>TF</strong>（Raw、Log、Binary）、<strong>IDF</strong>（不使用、ln(N/df)、ln(N/df)+1）與<strong>文件向量正規化</strong>（L2 → cosine；不正規化 → 內積）。本區使用同一套前處理、同一批查詢與同一份相關性判斷，一次只改變權重方法，並固定關閉拼字校正與模糊比對。</p>
+    </div>
+
+    <nav class="zipf-subnav" aria-label="權重實驗各區塊">
+      <a href="#wl-weights">權重計算</a>
+      <a href="#wl-compare">排名比較</a>
+      <a href="#wl-eval">評估指標</a>
+      <a href="#wl-judge">測試集與相關性標註</a>
+    </nav>
+
+    <div class="zipf-global">
+      <label>索引範圍
+        <select id="wl-scope">
+          <option value="abstract" selected>只用摘要</option>
+          <option value="title">標題＋摘要</option>
+        </select></label>
+      <span class="muted small-note">套用於本區所有表格。預設只用摘要：相關性判斷大量參考標題，只檢索摘要可以避免評估偏向標題命中。</span>
+    </div>
+
+    <!-- 1. 權重計算：文件向量、查詢向量、語料統計 -->
+    <section class="zblock" id="wl-weights">
+      <h3 class="lab-h3">權重計算</h3>
+      <details class="wl-defs">
+        <summary>方法定義（6 種預設組合的公式）</summary>
+        <div class="table-scroll"><table class="lab-table compact">
+          <thead><tr><th>方法</th><th>TF</th><th>IDF</th><th>文件權重 w(t, d)</th></tr></thead>
+          <tbody>
+            <tr><td>Raw TF</td><td>Raw</td><td>不使用</td><td><code>tf</code></td></tr>
+            <tr><td>Log TF</td><td>Log</td><td>不使用</td><td><code>1 + ln(tf)</code>（tf = 0 時為 0）</td></tr>
+            <tr><td>IDF only</td><td>Binary</td><td>ln(N/df)</td><td><code>1 × ln(N/df)</code>（有出現才算）</td></tr>
+            <tr><td>TF-IDF（raw TF）</td><td>Raw</td><td>ln(N/df)</td><td><code>tf × ln(N/df)</code></td></tr>
+            <tr><td>TF-IDF（log TF）</td><td>Log</td><td>ln(N/df)</td><td><code>(1 + ln tf) × ln(N/df)</code></td></tr>
+            <tr><td>TF-IDF（log TF，IDF+1）</td><td>Log</td><td>ln(N/df) + 1</td><td><code>(1 + ln tf) × (ln(N/df) + 1)</code></td></tr>
+          </tbody>
+        </table></div>
+        <p class="lab-footnote">查詢向量使用與文件相同的 TF、IDF 方法。正規化：L2 → cosine = q·d / (|q| |d|)；不正規化 → 內積 q·d。N 為文件數，df 為含有該詞的文件數，對數為自然對數。</p>
+      </details>
+
+      <h4 class="lab-h4">文件向量</h4>
+      <div class="inline-controls">
+        <label>文件 PMID
+          <input id="wl-doc-id" class="lab-input small-input" type="text" autocomplete="off" placeholder="例如 41765029"></label>
+        <button id="wl-doc-apply" class="primary-btn" type="button">顯示</button>
+        <button id="wl-doc-auto" class="ghost-btn-light" type="button">挑最高 tf 的文件</button>
+        <label>排序依據
+          <select id="wl-doc-sort">
+            <option value="tf" selected>tf</option>
+            <option value="tfidf">TF-IDF 權重</option>
+          </select></label>
+      </div>
+      <div id="wl-doc-table"></div>
+
+      <h4 class="lab-h4">查詢向量</h4>
+      <div class="inline-form">
+        <input id="wl-qv-q" class="lab-input" type="text" autocomplete="off" aria-label="查詢">
+        <button id="wl-qv-apply" class="primary-btn" type="button">顯示</button>
+      </div>
+      <div id="wl-qv-chips" class="chip-row"></div>
+      <div id="wl-qv-table"></div>
+      <p id="wl-qv-note" class="lab-footnote"></p>
+
+      <h4 class="lab-h4">語料統計</h4>
+      <div class="lab-grid-2">
+        <div>
+          <h5 class="wl-h5">df 最高與較少見的詞</h5>
+          <div id="wl-idf-table"></div>
+        </div>
+        <div>
+          <h5 class="wl-h5">文件內的 tf 與權重分佈</h5>
+          <div id="wl-tf-stats"></div>
+        </div>
+      </div>
+      <h5 class="wl-h5">df 與 IDF 的關係</h5>
+      <div id="wl-idf-chart" class="chart-wrap single"></div>
+      <p id="wl-idf-tip" class="chart-tip"></p>
+    </section>
+
+    <!-- 2. 排名比較 -->
+    <section class="zblock" id="wl-compare">
+      <h3 class="lab-h3">排名比較</h3>
+      <p class="lab-footnote">同一個查詢，左右兩欄用不同方法各列前 10 名。每篇右側的標記與<strong>另一欄</strong>比較：↑2 表示這篇在本欄比在另一欄前面 2 名，↓ 表示後面，＝ 表示名次相同，「新（29）」表示這篇不在另一欄的前 10 名（括號為它在另一欄的名次）。測試查詢會標出相關等級（<span class="rel-badge g2">2</span> 高度相關、<span class="rel-badge g1">1</span> 部分相關、<span class="rel-badge g0">0</span> 不相關）；「長度」為文件的索引詞數，超過語料平均 30% 以橘色標示。</p>
+      <div class="inline-form">
+        <input id="wl-cmp-q" class="lab-input" type="text" autocomplete="off" aria-label="查詢">
+        <button id="wl-cmp-apply" class="primary-btn" type="button">比較</button>
+      </div>
+      <div id="wl-cmp-chips" class="chip-row"></div>
+      <div class="inline-controls">
+        <label>左欄
+          <select id="wl-cmp-a" class="wl-method-select"></select></label>
+        <label>右欄
+          <select id="wl-cmp-b" class="wl-method-select"></select></label>
+        <span class="chip-row" id="wl-cmp-presets"></span>
+      </div>
+      <div id="wl-cmp-summary"></div>
+      <div id="wl-cmp-out" class="wl-cmp-grid"></div>
+    </section>
+
+    <!-- 3. 評估指標 -->
+    <section class="zblock" id="wl-eval">
+      <h3 class="lab-h3">評估指標</h3>
+      <p class="lab-footnote">12 個測試查詢（6 短、6 長）取平均。P@k = 前 k 筆中相關文件的比例；R@k = 相關文件中有幾成出現在前 k 筆；MRR = 第一篇相關文件名次的倒數平均；MAP = 平均精確率的平均；nDCG@10 使用 0／1／2 分級，DCG = Σ(2<sup>g</sup>−1)/log<sub>2</sub>(i+1)。等級 ≥ 1 即視為相關。每欄最高值以粗體標示。</p>
+      <div id="wl-eval-table"></div>
+      <button id="wl-eval-csv" class="ghost-btn-light csv-btn" type="button">下載 CSV</button>
+      <div class="lab-grid-2">
+        <div>
+          <h4 class="lab-h4">nDCG@10：L2 正規化 vs 不正規化</h4>
+          <div id="wl-eval-chart" class="chart-wrap"></div>
+          <p id="wl-eval-tip" class="chart-tip"></p>
+        </div>
+        <div>
+          <h4 class="lab-h4">nDCG@10：短查詢 vs 長查詢（L2）</h4>
+          <div id="wl-eval-group-chart" class="chart-wrap"></div>
+          <div id="wl-eval-group"></div>
+        </div>
+      </div>
+      <h4 class="lab-h4">前 10 名平均文件長度：L2 正規化 vs 不正規化</h4>
+      <div id="wl-eval-len-chart" class="chart-wrap single"></div>
+      <p id="wl-eval-len-tip" class="chart-tip"></p>
+      <details class="wl-defs">
+        <summary>各查詢的結果</summary>
+        <div class="inline-controls">
+          <label>指標
+            <select id="wl-pq-metric">
+              <option value="ndcg10" selected>nDCG@10</option>
+              <option value="p10">P@10</option>
+              <option value="rr">RR</option>
+              <option value="ap">AP</option>
+              <option value="r20">R@20</option>
+            </select></label>
+          <label>正規化
+            <select id="wl-pq-norm">
+              <option value="l2" selected>L2（cosine）</option>
+              <option value="none">不正規化（內積）</option>
+            </select></label>
+        </div>
+        <div id="wl-pq-table"></div>
+        <button id="wl-pq-csv" class="ghost-btn-light csv-btn" type="button">下載 CSV</button>
+      </details>
+    </section>
+
+    <!-- 4. 測試集與相關性標註 -->
+    <section class="zblock" id="wl-judge">
+      <h3 class="lab-h3">測試集與相關性標註</h3>
+      <p class="lab-footnote" id="wl-judge-desc"></p>
+      <div id="wl-queries"></div>
+      <details class="wl-defs" id="wl-judge-tool">
+        <summary>標註工具（檢視、修改相關性判斷）</summary>
+        <p class="lab-footnote">候選文件為該查詢的判讀集合（pool），再加上目前 24 種設定前 20 名中尚未判讀的文件。修改會存在這個瀏覽器（IndexedDB），評估結果立即更新；可匯出 JSON 備份，或恢復網站內建的標註。</p>
+        <div class="inline-controls">
+          <label>查詢
+            <select id="wl-judge-q"></select></label>
+          <label>顯示
+            <select id="wl-judge-filter">
+              <option value="all">全部候選</option>
+              <option value="rel">相關（1、2）</option>
+              <option value="new">尚未判讀</option>
+            </select></label>
+          <span class="manage-actions">
+            <button id="wl-judge-export" class="ghost-btn-light" type="button">匯出 JSON</button>
+            <button id="wl-judge-import" class="ghost-btn-light" type="button">匯入 JSON</button>
+            <button id="wl-judge-reset" class="ghost-btn-light danger" type="button">恢復內建標註</button>
+          </span>
+          <input type="file" id="wl-judge-file" accept=".json" hidden>
+        </div>
+        <p id="wl-judge-narr" class="lab-result"></p>
+        <p id="wl-judge-count" class="list-modal-count"></p>
+        <ul id="wl-judge-list" class="judge-list"></ul>
+      </details>
+    </section>
+  </div>
+</section>
+
+<!-- ============================ 詞頻分析 ============================ -->
+<section class="lab-section" id="zipf-section">
+  <div class="lab-inner">
+    <div class="lab-head">
+      <span class="lab-kicker">詞頻分析</span>
+      <h2>詞頻分佈與 Zipf's Law</h2>
+      <p class="lab-intro">分析目前語料庫（<span class="lab-corpus-count">0</span> 篇，標題＋摘要）的詞彙分佈：以四種前處理條件建立詞彙，計算每個詞的 Collection Frequency（CF）、Document Frequency（DF）與 IDF，並檢驗 Zipf's Law——詞的出現次數與排名大致成反比，排名越前面的詞出現越多次。以公式表示為 f(r) ∝ 1 / r<sup>k</sup>，取對數後 log f(r) = log C − k · log r，因此在 log–log 圖上應接近一條直線，斜率即為 Zipf exponent k（理想值約為 1）。</p>
+    </div>
+
+    <div class="lab-controls">
+      <button id="zipf-run" class="primary-btn" type="button">計算詞頻分佈</button>
+      <span id="zipf-status" class="lab-status"></span>
+    </div>
+
+    <div id="zipf-output" hidden>
+      <nav class="zipf-subnav" aria-label="詞頻分析各區塊">
+        <a href="#z-pre">前處理與詞彙統計</a>
+        <a href="#z-terms">詞彙頻率表</a>
+        <a href="#z-dist">詞頻分佈與 Zipf 迴歸</a>
+        <a href="#z-zones">區段分析</a>
+      </nav>
+
+      <div class="zipf-global">
+        <label>前處理條件
+          <select id="z-cond">
+            <option value="A">A：Tokenization + Case folding</option>
+            <option value="B">B：+ 去除標點</option>
+            <option value="C">C：+ 移除停用詞</option>
+            <option value="D" selected>D：+ Porter stemming</option>
+          </select></label>
+        <span class="muted small-note">套用於詞彙頻率表、詞頻分佈與 Zipf 迴歸</span>
+      </div>
+
+      <!-- 1. 前處理與詞彙統計 -->
+      <section class="zblock" id="z-pre">
+        <h3 class="lab-h3">前處理與詞彙統計</h3>
+        <ol class="pipeline-list">
+          <li><strong>A　Tokenization + Case folding</strong>：以空白切詞並轉成小寫（Data、DATA → data）；標點仍黏在字上，例如 <code>obesity,</code> 與 <code>obesity</code> 是不同的詞。</li>
+          <li><strong>B　+ 去除標點</strong>：data, data. data; → data；保留字中的連字號、撇號與小數點（glp-1、2.5），保留數字與停用詞。</li>
+          <li><strong>C　+ 移除停用詞</strong>：使用與檢索系統相同的停用詞表。</li>
+          <li><strong>D　+ Porter stemming</strong>：以自行實作的 Porter stemmer 進行詞幹還原（純數字不處理）。<button id="z-merge-open" class="term-link inline-link" type="button">查看合併實例 →</button></li>
+        </ol>
+        <h4 class="lab-h4">四種前處理條件的比較</h4>
+        <div id="z-cmp-table"></div>
+        <button id="z-csv-cmp" class="ghost-btn-light csv-btn" type="button">下載 CSV</button>
+
+        <div class="chart-card">
+          <div class="chart-tabs">
+            <button class="chart-tab active" data-tab="loglog" type="button">Rank–CF 分佈（log–log）</button>
+            <button class="chart-tab" data-tab="spec" type="button">詞頻譜 V(m)</button>
+          </div>
+          <div id="z-pre-chart" class="chart-col"></div>
+          <p id="z-pre-tip" class="chart-tip"></p>
+        </div>
+
+      </section>
+
+      <!-- 2. 詞彙頻率表 -->
+      <section class="zblock" id="z-terms">
+        <h3 class="lab-h3">詞彙頻率表（CF／DF／IDF）</h3>
+        <p class="lab-footnote">CF = 詞在整個語料中出現的總次數；DF = 包含該詞的文獻數；CF/DF = 平均每篇（有出現的文獻）出現幾次，越大代表越集中在少數文獻；IDF = log<sub>10</sub>(N / DF)。點擊欄位標題可排序，點擊詞可直接搜尋。</p>
+        <div class="terms-layout">
+          <div>
+            <div class="mode-tabs">
+              <button class="mode-tab chart-tab active" data-mode="top50" type="button">前 50 名</button>
+              <button class="mode-tab chart-tab" data-mode="all" type="button">全部詞彙</button>
+              <button class="mode-tab chart-tab" data-mode="custom" type="button">自選詞</button>
+            </div>
+            <div id="z-terms-filters" class="inline-controls">
+              <label>搜尋詞
+                <input id="z-terms-search" class="lab-input small-input" type="search" placeholder="例如 glucag" autocomplete="off"></label>
+              <label title="依 CF/DF 排序時，建議設定最低 CF（例如 20），避免罕見詞干擾">最低 CF
+                <input id="z-terms-mincf" class="lab-input small-input num-input" type="number" min="1" value="1"></label>
+            </div>
+            <div id="z-terms-custom" hidden>
+              <textarea id="z-terms-input" class="lab-input terms-input" rows="3" aria-label="要比較的詞（逗號或換行分隔）"></textarea>
+              <div class="btn-row">
+                <button id="z-terms-apply" class="primary-btn" type="button">更新表格</button>
+                <button id="z-terms-reset" class="ghost-btn-light" type="button">恢復預設詞彙</button>
+              </div>
+              <p class="lab-footnote">輸入的詞會依目前的前處理條件轉換成索引詞，例如條件 D 時 patients 會轉成 patient。</p>
+            </div>
+            <div id="z-terms-table"></div>
+            <button id="z-csv-terms" class="ghost-btn-light csv-btn" type="button">下載 CSV（目前的檢視）</button>
+          </div>
+          <div>
+            <h4 class="lab-h4">CF–DF 散佈圖</h4>
+            <div id="z-scatter"></div>
+            <p id="z-scatter-tip" class="chart-tip"></p>
+            <p class="lab-footnote">每個點代表一個詞。虛線為 CF = DF（每篇只出現一次）；離虛線越遠、越往上方的詞，在少數文獻中重複出現越多次。表格目前這一頁的詞以橘色標示。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 詞頻分佈與 Zipf 迴歸 -->
+      <section class="zblock" id="z-dist">
+        <h3 class="lab-h3">詞頻分佈與 Zipf 迴歸</h3>
+        <div class="dist-controls">
+          <div class="chart-tabs">
+            <button class="scale-tab chart-tab active" data-scale="linear" type="button">線性座標</button>
+            <button class="scale-tab chart-tab" data-scale="semilog" type="button">完整分佈（CF 取對數）</button>
+            <button class="scale-tab chart-tab" data-scale="loglog" type="button">log–log 與迴歸線</button>
+          </div>
+          <div class="inline-controls">
+            <label id="z-linN-wrap">顯示前
+              <select id="z-linN"><option value="100">100 名</option><option value="200" selected>200 名</option><option value="500">500 名</option><option value="1000">1000 名</option></select></label>
+            <label class="lab-check"><input type="checkbox" id="z-pair"> 並排比較兩種條件</label>
+            <span id="z-pair-selects" class="pair-selects" hidden>
+              <label>左
+                <select id="z-pairL"><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option></select></label>
+              <label>右
+                <select id="z-pairR"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D" selected>D</option></select></label>
+            </span>
+            <label class="lab-check"><input type="checkbox" id="z-showbounds"> 顯示區段界線</label>
+          </div>
+        </div>
+        <div id="z-dist-charts" class="chart-col"></div>
+        <p id="z-dist-tip" class="chart-tip"></p>
+        <p id="z-dist-note" class="lab-footnote"></p>
+
+        <h4 class="lab-h4">Zipf 迴歸結果</h4>
+        <div id="z-reg-table" class="reg-wrap"></div>
+        <button id="z-csv-reg" class="ghost-btn-light csv-btn" type="button">下載 CSV</button>
+
+        <h4 class="lab-h4" id="z-zones">區段分析：高頻／中頻／低頻</h4>
+        <p class="lab-footnote">依兩個門檻把詞彙分成三段：<strong>高頻（太常見）</strong>為出現在太多文獻中的詞，<strong>低頻（太罕見）</strong>為出現次數極少的詞，其餘為<strong>中頻（顯著詞）</strong>。區段一律依 CF 排名切分：高頻的界線在最後一個 DF 比例超過門檻的詞之後，因此高頻區可能包含少數 DF 未達門檻的詞。主圖勾選「顯示區段界線」可看到同一組界線。</p>
+        <div class="inline-controls zone-controls">
+          <label>高頻門檻：DF 比例 ＞（%）
+            <input id="z-dfpct" class="lab-input small-input num-input" type="number" min="0" max="100" step="5" value="30"></label>
+          <label>低頻門檻：CF ≤
+            <input id="z-cfmax" class="lab-input small-input num-input" type="number" min="0" step="1" value="2"></label>
+          <button id="z-threshold-reset" class="ghost-btn-light" type="button">恢復預設門檻</button>
+        </div>
+        <p class="lab-footnote">殘差 = 實際的 log<sub>10</sub>(CF) 減去迴歸線的預測值。點越貼近 0 的水平線，該段越符合 Zipf 直線；有規律的彎曲代表系統性的偏離。</p>
+        <div id="z-res-charts" class="chart-col"></div>
+        <p id="z-res-tip" class="chart-tip"></p>
+        <div id="z-seg-table"></div>
+        <button id="z-csv-seg" class="ghost-btn-light csv-btn" type="button">下載 CSV</button>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 詞嵌入 ============================ -->
+<section class="lab-section alt" id="w2v-section">
+  <div class="lab-inner">
+    <div class="lab-head">
+      <span class="lab-kicker">詞嵌入</span>
+      <h2>Word2Vec 詞向量：CBOW 與 Skip-Gram</h2>
+      <p class="lab-intro">以目前語料庫（<span class="lab-corpus-count">0</span> 篇）訓練詞向量，讓出現在相似上下文的詞擁有相近的向量。<strong>CBOW</strong> 以周圍的上下文詞預測中心詞；<strong>Skip-Gram</strong> 以中心詞預測周圍的上下文詞。兩者皆使用 Negative Sampling、高頻詞次抽樣與動態視窗，視窗不跨越句子邊界。網站已內建以相同參數預先訓練的 CBOW 與 Skip-Gram 模型；調整參數後按「開始訓練」，新模型會加入下方的模型清單，可任選兩個模型比較。</p>
+    </div>
+
+    <div class="w2v-grid">
+      <div class="lab-card w2v-params">
+        <h3 class="lab-h3">訓練參數</h3>
+        <div class="radio-row">
+          <label><input type="radio" name="w2v-model" value="sg" checked> Skip-Gram</label>
+          <label><input type="radio" name="w2v-model" value="cbow"> CBOW</label>
+        </div>
+        <div class="param-grid">
+          <label>向量維度
+            <select id="w2v-dim"><option>50</option><option selected>100</option><option>200</option></select></label>
+          <label>視窗大小
+            <input id="w2v-window" type="number" min="1" max="20" value="5"></label>
+          <label>負樣本數
+            <input id="w2v-neg" type="number" min="1" max="20" value="5"></label>
+          <label>Epochs
+            <input id="w2v-epochs" type="number" min="1" max="50" value="5"></label>
+          <label>最小詞頻
+            <input id="w2v-mincount" type="number" min="1" max="50" value="5"></label>
+          <label>次抽樣門檻 t
+            <select id="w2v-sample"><option value="0">不使用</option><option value="0.001" selected>1e-3</option><option value="0.0001">1e-4</option></select></label>
+          <label>初始學習率
+            <input id="w2v-lr" type="number" step="0.005" min="0" placeholder="預設 0.025"></label>
+        </div>
+        <label class="lab-check"><input type="checkbox" id="w2v-stop" checked> 移除停用詞</label>
+        <label class="lab-check"><input type="checkbox" id="w2v-stem"> 使用 Porter 詞幹</label>
+        <div class="btn-row">
+          <button id="w2v-train" class="primary-btn" type="button">開始訓練</button>
+          <button id="w2v-cancel" class="ghost-btn-light" type="button" hidden>取消</button>
+        </div>
+        <div id="w2v-progress" class="progress" hidden><span id="w2v-progress-bar"></span></div>
+        <p id="w2v-status" class="lab-status"></p>
+        <div id="w2v-loss"></div>
+      </div>
+
+      <div class="lab-card w2v-models">
+        <h3 class="lab-h3">模型清單與比較</h3>
+        <p class="lab-footnote">選擇要比較的模型 A 與模型 B。下方所有的表格與圖，都會依這裡的選擇呈現。</p>
+        <div id="w2v-slots"></div>
+        <div id="w2v-compare"></div>
+        <div id="w2v-loss-compare"></div>
+        <button id="w2v-csv-compare" class="ghost-btn-light csv-btn" type="button">下載 CSV</button>
+      </div>
+    </div>
+
+    <div id="w2v-explore" class="w2v-explore-full disabled">
+      <p class="w2v-placeholder">載入預設模型或訓練完成後，即可在此分析。</p>
+
+      <section class="zblock" id="w2v-vocab-block">
+        <h3 class="lab-h3">詞彙表統計</h3>
+        <div id="w2v-vocab"></div>
+      </section>
+
+      <section class="zblock" id="w2v-nb-block">
+        <h3 class="lab-h3">近鄰詞比較（cosine similarity 前 5 名）</h3>
+        <p class="lab-footnote">輸入要查詢的詞（逗號或換行分隔），表格列出模型 A 與模型 B 各自最相近的 5 個詞與相似度。點擊詞可直接搜尋文獻。</p>
+        <textarea id="w2v-nb-input" class="lab-input terms-input" rows="2" aria-label="查詢的詞"></textarea>
+        <div class="btn-row">
+          <button id="w2v-nb-apply" class="primary-btn" type="button">更新表格</button>
+          <button id="w2v-nb-reset" class="ghost-btn-light" type="button">恢復預設詞彙</button>
+        </div>
+        <div id="w2v-nb-table"></div>
+        <button id="w2v-csv-nb" class="ghost-btn-light csv-btn" type="button">下載 CSV</button>
+      </section>
+
+      <section class="zblock" id="w2v-pair-block">
+        <h3 class="lab-h3">詞對相似度</h3>
+        <p class="lab-footnote">每行一組詞對，以「-」分隔；「#」後的文字會顯示在備註欄，可用來標示對照組（不相關的詞對），作為判斷相似度高低的基準。</p>
+        <textarea id="w2v-pair-input" class="lab-input terms-input" rows="5" aria-label="詞對"></textarea>
+        <div class="btn-row">
+          <button id="w2v-pair-apply" class="primary-btn" type="button">更新表格</button>
+          <button id="w2v-pair-reset" class="ghost-btn-light" type="button">恢復預設詞對</button>
+        </div>
+        <div id="w2v-pair-table"></div>
+        <button id="w2v-csv-pair" class="ghost-btn-light csv-btn" type="button">下載 CSV</button>
+      </section>
+
+      <section class="zblock" id="w2v-viz-block">
+        <h3 class="lab-h3">詞向量視覺化：PCA 與 t-SNE</h3>
+        <p class="lab-footnote">將詞向量降到二維並標示詞名。每個查詢詞與它的近鄰為一組，以同一顏色標示，用來觀察語意相近的詞是否聚在一起。注意：視覺上形成群聚，不代表模型一定具有良好的語意表示。</p>
+        <div class="inline-controls">
+          <label>模型
+            <select id="w2v-viz-model"><option value="A" selected>模型 A</option><option value="B">模型 B</option></select></label>
+          <label>每個詞取前幾個近鄰
+            <select id="w2v-viz-k"><option>3</option><option selected>5</option><option>8</option></select></label>
+          <label title="t-SNE 的困惑度，約等於每個點考慮的近鄰數；點數少時宜設小">t-SNE perplexity
+            <select id="w2v-viz-perp"><option>5</option><option selected>10</option><option>20</option></select></label>
+        </div>
+        <textarea id="w2v-viz-input" class="lab-input terms-input" rows="1" aria-label="要視覺化的詞"></textarea>
+        <div class="btn-row">
+          <button id="w2v-viz-apply" class="primary-btn" type="button">更新圖表</button>
+          <button id="w2v-viz-reset" class="ghost-btn-light" type="button">恢復預設詞彙</button>
+        </div>
+        <div class="zipf-pair">
+          <div class="zipf-pane"><h4 class="zipf-pane-title"><span class="pane-name">PCA</span><span class="pane-meta" id="w2v-pca-meta"></span></h4><div id="w2v-pca" class="chart-wrap"></div></div>
+          <div class="zipf-pane"><h4 class="zipf-pane-title"><span class="pane-name">t-SNE</span><span class="pane-meta" id="w2v-tsne-meta"></span></h4><div id="w2v-tsne" class="chart-wrap"></div></div>
+        </div>
+        <div id="w2v-viz-legend" class="viz-legend"></div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 字串比對 ============================ -->
+<section class="lab-section" id="ed-section">
+  <div class="lab-inner">
+    <div class="lab-head">
+      <span class="lab-kicker">字串比對與拼字校正</span>
+      <h2>編輯距離（動態規劃）與拼字校正</h2>
+      <p class="lab-intro">D[i][j] = min(D[i−1][j] + 1, D[i][j−1] + 1, D[i−1][j−1] + [a<sub>i</sub> ≠ b<sub>j</sub>])；允許交換時再加入 D[i−2][j−2] + 1（當 a<sub>i−1</sub>a<sub>i</sub> 與 b<sub>j−1</sub>b<sub>j</sub> 互為顛倒，例如 ae ↔ ea）。搜尋時的拼字校正與模糊比對都使用同一個 DP 實作；下方可檢視完整 DP 表格與回溯出的最佳對齊路徑。</p>
+    </div>
+    <div class="lab-grid-2">
+      <div class="lab-card">
+        <h3 class="lab-h3">DP 表格與對齊</h3>
+        <div class="inline-form">
+          <input id="ed-a" class="lab-input" type="text" value="nausae" aria-label="來源字串" maxlength="24">
+          <input id="ed-b" class="lab-input" type="text" value="nausea" aria-label="目標字串" maxlength="24">
+        </div>
+        <label class="lab-check"><input type="checkbox" id="ed-transpose" checked> 允許相鄰字元交換（Damerau / OSA，拼字校正使用此設定）</label>
+        <p class="lab-footnote">範例：
+          <button class="ed-example term-link" type="button" data-pair="diabtes|diabetes">diabtes → diabetes</button>
+          <button class="ed-example term-link" type="button" data-pair="nausae|nausea">nausae → nausea</button>
+          <button class="ed-example term-link" type="button" data-pair="kitten|sitting">kitten → sitting</button>
+          <button class="ed-example term-link" type="button" data-pair="glp1|glp-1">glp1 → glp-1</button></p>
+        <p id="ed-result" class="lab-result"></p>
+        <div id="ed-ops" class="align-wrap"></div>
+        <div id="ed-table" class="dp-wrap"></div>
+      </div>
+      <div class="lab-card">
+        <h3 class="lab-h3">以語料庫為字典的拼字校正</h3>
+        <p class="lab-footnote">字典＝語料庫（標題＋摘要）中所有非停用詞與其出現次數。候選字依「編輯距離小 → 詞頻高」排序；搜尋時自動採用第一名。</p>
+        <input id="spell-input" class="lab-input" type="text" value="semaglutid" autocomplete="off" aria-label="輸入要校正的字">
+        <div id="spell-out"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="analyzer-section" id="analyzer">
+  <div class="analyzer-inner">
+    <h2>斷句與統計工具</h2>
+    <p class="analyzer-intro">在下方貼上（或編輯）任何一段文字，統計數字會即時更新——使用的正是與上方語料庫完全相同的規則式斷句器、斷詞器與 Porter 詞幹還原演算法。</p>
+    <div class="analyzer-grid">
+      <div class="analyzer-input-col">
+        <textarea id="analyzer-input" rows="8" placeholder="貼上一段句子或文字…"></textarea>
+        <button id="analyzer-sample" type="button" class="ghost-btn">載入範例句子</button>
+      </div>
+      <div class="analyzer-output-col">
+        <div id="analyzer-output" class="stat-chip-row"></div>
+        <h3 class="sub-heading">偵測到的句子</h3>
+        <ol id="analyzer-sentences" class="sentence-list"></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<dialog id="doc-modal" class="doc-modal">
+  <div class="doc-modal-inner">
+    <button id="doc-modal-close" class="doc-modal-close" aria-label="關閉">×</button>
+    <h2 id="doc-modal-title"></h2>
+    <p id="doc-modal-meta" class="result-meta"></p>
+    <div id="doc-modal-stats" class="stat-chip-row"></div>
+    <p id="doc-modal-match-banner" class="match-banner" hidden></p>
+    <div id="doc-modal-fulltext" class="doc-modal-fulltext"></div>
+    <h3 class="sub-heading">詞項權重向量</h3>
+    <div id="doc-modal-weights"></div>
+    <h3 class="sub-heading">句子切分結果</h3>
+    <ol id="doc-modal-sentences" class="sentence-list"></ol>
+  </div>
+</dialog>
+
+
+<dialog id="doc-stats-modal" class="doc-modal list-modal">
+  <div class="doc-modal-inner">
+    <button id="doc-stats-close" class="doc-modal-close" aria-label="關閉">×</button>
+    <h2>各文獻字數與句數</h2>
+    <div class="list-modal-tools">
+      <input id="doc-stats-search" class="lab-input" type="search" placeholder="搜尋 PMID 或標題" aria-label="搜尋文獻">
+      <select id="doc-stats-sort" class="lab-select" aria-label="排序">
+        <option value="orig">原始順序</option>
+        <option value="words-desc">字數：多 → 少</option>
+        <option value="words-asc">字數：少 → 多</option>
+        <option value="sent-desc">句數：多 → 少</option>
+        <option value="sent-asc">句數：少 → 多</option>
+      </select>
+    </div>
+    <p id="doc-stats-count" class="list-modal-count"></p>
+    <div id="doc-stats-list" class="list-modal-body"></div>
+    <p class="lab-footnote">點擊任一篇可查看完整文章。</p>
+  </div>
+</dialog>
+
+<dialog id="merge-modal" class="doc-modal list-modal">
+  <div class="doc-modal-inner">
+    <button id="merge-close" class="doc-modal-close" aria-label="關閉">×</button>
+    <h2>詞幹還原合併實例</h2>
+    <div class="list-modal-tools">
+      <input id="merge-search" class="lab-input" type="search" placeholder="搜尋詞幹或詞形，例如 compar、diabet" aria-label="搜尋詞幹或詞形">
+    </div>
+    <p id="merge-count" class="list-modal-count"></p>
+    <div id="merge-list" class="list-modal-body merge-grid modal-merge-grid"></div>
+    <p class="lab-footnote">每張卡片是一個詞幹與被合併的詞形（數字為各詞形在語料中出現的次數），依合併的詞形數由多到少排序。</p>
+  </div>
+</dialog>
+
+<dialog id="manage-modal" class="doc-modal list-modal">
+  <div class="doc-modal-inner">
+    <button id="manage-close" class="doc-modal-close" aria-label="關閉">×</button>
+    <h2>管理文獻</h2>
+    <div class="list-modal-tools">
+      <input id="manage-search" class="lab-input" type="search" placeholder="搜尋 PMID 或標題" aria-label="搜尋文獻">
+      <select id="manage-source" class="lab-select" aria-label="來源">
+        <option value="all">全部來源</option>
+        <option value="base">預設語料</option>
+        <option value="upload">匯入的文獻</option>
+      </select>
+    </div>
+    <div class="manage-bar">
+      <label class="manage-check"><input type="checkbox" id="manage-select-all"> 全選目前顯示的文獻</label>
+      <span class="manage-actions">
+        <button id="manage-delete-selected" class="ghost-btn-light" type="button" disabled>刪除勾選（0）</button>
+        <button id="manage-clear-all" class="ghost-btn-light danger" type="button">全部清除</button>
+        <button id="manage-restore" class="ghost-btn-light" type="button">恢復預設語料</button>
+      </span>
+    </div>
+    <p id="manage-count" class="list-modal-count"></p>
+    <ul id="manage-list" class="list-modal-body manage-list"></ul>
+    <p class="lab-footnote">刪除紀錄與匯入的文獻存在這個瀏覽器中（IndexedDB），重新整理後仍會保留。「恢復預設語料」會還原 GLP-1 預設文獻、移除所有匯入的文獻，並換回預設 Word2Vec 模型。</p>
+  </div>
+</dialog>
+
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/ir-core.js"></script>
+<script src="assets/js/eval-core.js"></script>
+<script src="assets/js/edit-distance.js"></script>
+<script src="assets/js/zipf.js"></script>
+<script src="assets/js/zipf-report.js"></script>
+<script src="assets/js/word2vec.js"></script>
+<script src="assets/js/xml-parser.js"></script>
+<script src="assets/js/pmid-fetcher.js"></script>
+<script src="assets/js/pubmed-abstract-txt-parser.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/w2v-ui.js"></script>
+<script src="assets/js/lab-ui.js"></script>
+<script src="assets/js/weighting-lab.js"></script>
+</body>
+</html>

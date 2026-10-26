@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article article-type="research-article" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">Vaccine Immunol</journal-id>
+      <journal-title-group><journal-title>Vaccine and Immunology Reports</journal-title></journal-title-group>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="pmc">PMC_sample_002</article-id>
+      <article-id pub-id-type="pmid">30000002</article-id>
+      <title-group>
+        <article-title>Durability of Neutralizing Antibody Responses Following mRNA COVID-19 Booster Vaccination in Older Adults</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author"><name><surname>Okafor</surname><given-names>N.</given-names></name></contrib>
+        <contrib contrib-type="author"><name><surname>Petrova</surname><given-names>I.</given-names></name></contrib>
+      </contrib-group>
+      <pub-date pub-type="epub"><year>2022</year></pub-date>
+      <abstract>
+        <p>Waning humoral immunity after primary COVID-19 vaccination raises concern for breakthrough infection, particularly among older adults. We measured neutralizing antibody titers against the ancestral strain and two variants of concern in 340 adults aged 65 years and older at 1, 3, and 6 months after a third-dose mRNA booster. Titers rose approximately 12-fold at one month post-booster relative to pre-booster levels, and remained significantly elevated at six months (p &lt; 0.001 vs. baseline), although with a measurable decline of roughly 60% between months one and six. Participants with prior SARS-CoV-2 infection maintained higher titers throughout follow-up than infection-naive participants. These data support current booster recommendations for older adults and suggest hybrid immunity confers additional durability.</p>
+      </abstract>
+      <kwd-group>
+        <kwd>COVID-19</kwd>
+        <kwd>mRNA vaccine</kwd>
+        <kwd>booster</kwd>
+        <kwd>neutralizing antibodies</kwd>
+        <kwd>older adults</kwd>
+      </kwd-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec>
+      <title>Introduction</title>
+      <p>Older adults experience disproportionately severe outcomes from SARS-CoV-2 infection, including higher rates of hospitalization and death, due in part to immunosenescence and a higher burden of comorbid conditions. Primary vaccination series substantially reduce severe disease, but antibody titers decline over time, prompting recommendations for booster doses. Understanding how long booster-induced protection persists, and whether it differs by variant, is essential for guiding public health policy, e.g. the timing of subsequent booster campaigns.</p>
+    </sec>
+    <sec>
+      <title>Methods</title>
+      <p>We enrolled 340 community-dwelling adults aged 65 and older who received a homologous mRNA booster dose (either BNT162b2 or mRNA-1273) following a two-dose primary series. Serum samples were collected prior to boosting and at 1, 3, and 6 months thereafter. Neutralizing antibody titers were measured using a pseudovirus neutralization assay against the ancestral (Wuhan-Hu-1) strain and two variants of concern. Participants self-reported prior confirmed or suspected SARS-CoV-2 infection, which was categorized separately in a subgroup analysis.</p>
+    </sec>
+    <sec>
+      <title>Results</title>
+      <p>Neutralizing titers increased approximately 12-fold from pre-booster baseline to the one-month timepoint across all three viral targets tested. Titers declined between months one and six but remained significantly above pre-booster levels at every measured timepoint (p &lt; 0.001). The rate of decline was similar across age subgroups (65-74 vs. 75+ years). Participants with a documented history of prior infection exhibited approximately 2.5-fold higher titers at six months compared with infection-naive participants, consistent with a hybrid immunity effect.</p>
+    </sec>
+    <sec>
+      <title>Discussion</title>
+      <p>Booster vaccination substantially and durably increases neutralizing antibody titers in older adults, even against variants of concern, although some decline over six months is expected. Our results reinforce current guidance recommending booster doses for this age group and highlight that individuals without prior infection may benefit most from timely re-boosting. Limitations include the absence of a placebo comparator and reliance on antibody titers as a correlate of protection rather than direct clinical outcomes such as confirmed infection or hospitalization.</p>
+    </sec>
+  </body>
+</article>

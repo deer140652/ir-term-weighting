@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article article-type="research-article" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">J Alzheimers Dis</journal-id>
+      <journal-title-group><journal-title>Journal of Alzheimer's Disease Research</journal-title></journal-title-group>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="pmc">PMC_sample_005</article-id>
+      <article-id pub-id-type="pmid">30000005</article-id>
+      <title-group>
+        <article-title>Plasma Phosphorylated Tau 217 as a Biomarker for Early Detection of Alzheimer's Disease Pathology</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author"><name><surname>Lindqvist</surname><given-names>S.</given-names></name></contrib>
+        <contrib contrib-type="author"><name><surname>Farooq</surname><given-names>A.</given-names></name></contrib>
+      </contrib-group>
+      <pub-date pub-type="epub"><year>2023</year></pub-date>
+      <abstract>
+        <p>Blood-based biomarkers could substantially expand access to early Alzheimer's disease (AD) detection compared with cerebrospinal fluid or PET-based methods, which are costly and invasive. We evaluated plasma phosphorylated tau at threonine 217 (p-tau217) as a diagnostic marker in 410 participants spanning cognitively unimpaired, mild cognitive impairment, and AD dementia groups, using amyloid PET status as the reference standard. Plasma p-tau217 distinguished amyloid-positive from amyloid-negative participants with an area under the curve of 0.94, outperforming plasma p-tau181 (AUC 0.86) and comparable to cerebrospinal fluid biomarkers. Diagnostic accuracy remained high after adjustment for age, sex, and renal function. These results support plasma p-tau217 as a scalable first-line screening tool for AD pathology.</p>
+      </abstract>
+      <kwd-group>
+        <kwd>Alzheimer's disease</kwd>
+        <kwd>biomarker</kwd>
+        <kwd>phosphorylated tau</kwd>
+        <kwd>amyloid PET</kwd>
+        <kwd>blood test</kwd>
+      </kwd-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec>
+      <title>Introduction</title>
+      <p>Accurate, early identification of Alzheimer's disease pathology is increasingly important as disease-modifying therapies targeting amyloid-beta become available, since treatment benefit is greatest before extensive neurodegeneration occurs. Current confirmatory diagnostic methods, amyloid PET imaging and cerebrospinal fluid analysis via lumbar puncture, are expensive, limited in availability, or invasive, restricting their use as population-level screening tools. Blood-based biomarkers, if sufficiently accurate, could dramatically expand access to early detection, e.g. in primary care settings.</p>
+    </sec>
+    <sec>
+      <title>Methods</title>
+      <p>We measured plasma p-tau217 and, for comparison, plasma p-tau181, in 410 participants drawn from a memory clinic cohort, comprising cognitively unimpaired individuals, those with mild cognitive impairment, and those with clinically diagnosed AD dementia. All participants underwent amyloid PET imaging, which served as the ground-truth reference standard for amyloid pathology. Diagnostic performance was assessed using receiver operating characteristic curve analysis, with area under the curve (AUC) as the primary metric.</p>
+    </sec>
+    <sec>
+      <title>Results</title>
+      <p>Plasma p-tau217 concentrations were markedly higher in amyloid-PET-positive participants across all three clinical stages. The biomarker distinguished amyloid-positive from amyloid-negative participants with an AUC of 0.94 (95% CI 0.91-0.97), substantially outperforming plasma p-tau181 (AUC 0.86, p &lt; 0.001 for comparison). Diagnostic accuracy of p-tau217 was not meaningfully affected by age, sex, or estimated glomerular filtration rate in multivariable models.</p>
+    </sec>
+    <sec>
+      <title>Discussion</title>
+      <p>Plasma p-tau217 shows excellent diagnostic accuracy for amyloid pathology across the AD clinical spectrum and could serve as an accessible first-line screening or triage test ahead of confirmatory PET or cerebrospinal fluid testing. Broader validation in diverse, community-based populations and standardization of assay platforms across laboratories will be necessary before widespread clinical adoption.</p>
+    </sec>
+  </body>
+</article>

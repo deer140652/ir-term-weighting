@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Archiving and Interchange DTD v1.2 20190208//EN" "JATS-archivearticle1.dtd">
+<article article-type="research-article" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">J Diabetes Res</journal-id>
+      <journal-title-group><journal-title>Journal of Diabetes Research</journal-title></journal-title-group>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="pmc">PMC_sample_001</article-id>
+      <article-id pub-id-type="pmid">30000001</article-id>
+      <title-group>
+        <article-title>Metformin and Lifestyle Intervention for Glycemic Control in Newly Diagnosed Type 2 Diabetes: A Randomized Comparison</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author"><name><surname>Chen</surname><given-names>H.</given-names></name></contrib>
+        <contrib contrib-type="author"><name><surname>Alvarez</surname><given-names>M.</given-names></name></contrib>
+      </contrib-group>
+      <pub-date pub-type="epub"><year>2023</year></pub-date>
+      <abstract>
+        <p>Background: Type 2 diabetes mellitus (T2DM) is a chronic metabolic disorder characterized by insulin resistance and progressive beta-cell dysfunction. Early glycemic control reduces the risk of microvascular and macrovascular complications, e.g. retinopathy, nephropathy, and cardiovascular disease. Methods: We conducted a 24-week randomized trial comparing metformin monotherapy with a combined metformin plus structured lifestyle intervention in 212 adults with newly diagnosed T2DM. The primary outcome was change in HbA1c from baseline. Secondary outcomes included fasting plasma glucose, body weight, and patient-reported quality of life. Results: Mean HbA1c fell by 1.1% in the metformin-only group vs. 1.8% in the combined-therapy group (p &lt; 0.001). Body weight decreased by 2.3 kg and 5.6 kg, respectively. No severe hypoglycemic events were reported. Conclusions: Adding a structured lifestyle intervention to metformin significantly improves glycemic control and weight outcomes compared with pharmacotherapy alone in early T2DM.</p>
+      </abstract>
+      <kwd-group>
+        <kwd>type 2 diabetes</kwd>
+        <kwd>metformin</kwd>
+        <kwd>lifestyle intervention</kwd>
+        <kwd>HbA1c</kwd>
+        <kwd>glycemic control</kwd>
+      </kwd-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec>
+      <title>Introduction</title>
+      <p>Type 2 diabetes mellitus affects an estimated 537 million adults worldwide and its prevalence continues to rise alongside obesity and sedentary lifestyles. Insulin resistance in skeletal muscle, liver, and adipose tissue, combined with declining pancreatic beta-cell function, drives the characteristic hyperglycemia of the disease. Untreated or poorly controlled T2DM substantially increases the risk of cardiovascular events, chronic kidney disease, and diabetic retinopathy. Dr. Chen and colleagues have previously shown that early intensive management improves long-term outcomes (see Fig. 1 in their 2019 report).</p>
+      <p>Metformin remains the first-line pharmacologic agent for most patients because of its favorable safety profile, low cost, and modest weight-neutral or weight-reducing effect. However, lifestyle modification, including dietary change and increased physical activity, is recommended as a foundational component of care by essentially every major clinical guideline. Whether adding a structured lifestyle program to metformin produces clinically meaningful additional benefit, versus metformin alone, remains an important practical question for clinicians.</p>
+    </sec>
+    <sec>
+      <title>Methods</title>
+      <p>This was a prospective, open-label, randomized controlled trial conducted at three outpatient endocrinology clinics. Eligible participants were adults aged 18-70 years with a new diagnosis of T2DM (HbA1c 7.0-9.5%) who were treatment-naive. Participants were randomized 1:1 to receive either metformin titrated to 2000 mg/day, or the same metformin regimen plus a 24-week structured lifestyle program consisting of weekly dietitian counseling and a supervised walking plan of at least 150 min/week.</p>
+      <p>The primary endpoint was the absolute change in HbA1c at week 24. Statistical analysis used a two-sample t-test for continuous outcomes and chi-square tests for categorical outcomes, with significance set at p &lt; 0.05. Sample size calculations assumed a between-group difference of 0.5% in HbA1c with a standard deviation of 1.2%, requiring approximately 100 participants per arm to achieve 90% power.</p>
+    </sec>
+    <sec>
+      <title>Results</title>
+      <p>Of 212 randomized participants, 198 completed the 24-week protocol. Baseline characteristics were balanced between groups, with a mean age of 54.2 years and mean baseline HbA1c of 8.1%. At week 24, the combined-therapy group achieved significantly greater HbA1c reduction than the metformin-only group (mean difference 0.7%, 95% CI 0.4-1.0, p &lt; 0.001). Fasting plasma glucose decreased more in the combined group as well. Adverse events were mild and mostly gastrointestinal, consistent with known metformin tolerability.</p>
+    </sec>
+    <sec>
+      <title>Discussion</title>
+      <p>These findings support incorporating structured lifestyle intervention alongside metformin from the point of diagnosis rather than reserving it for patients who fail pharmacotherapy alone. The magnitude of additional HbA1c reduction observed here is clinically meaningful and is consistent with prior meta-analyses. Limitations include the open-label design and a relatively short follow-up period; longer studies are needed to confirm durability of effect and impact on hard cardiovascular endpoints.</p>
+    </sec>
+  </body>
+</article>

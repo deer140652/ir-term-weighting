@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article article-type="research-article" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">Cancer Immunol Res</journal-id>
+      <journal-title-group><journal-title>Cancer Immunology Research</journal-title></journal-title-group>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="pmc">PMC_sample_003</article-id>
+      <article-id pub-id-type="pmid">30000003</article-id>
+      <title-group>
+        <article-title>PD-1 Checkpoint Inhibition Combined with Chemotherapy in Advanced Non-Small Cell Lung Cancer: Overall Survival Analysis</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author"><name><surname>Yamamoto</surname><given-names>K.</given-names></name></contrib>
+        <contrib contrib-type="author"><name><surname>Dubois</surname><given-names>L.</given-names></name></contrib>
+      </contrib-group>
+      <pub-date pub-type="epub"><year>2021</year></pub-date>
+      <abstract>
+        <p>Immune checkpoint inhibitors targeting programmed cell death protein 1 (PD-1) have transformed treatment of advanced non-small cell lung cancer (NSCLC), but the additional benefit of combining checkpoint blockade with platinum-based chemotherapy versus chemotherapy alone requires long-term survival data. In this phase III trial, 580 patients with previously untreated stage IV NSCLC without targetable driver mutations were randomized to pembrolizumab plus chemotherapy or chemotherapy plus placebo. Median overall survival was 22.1 months in the combination arm versus 13.4 months in the chemotherapy-alone arm (hazard ratio 0.64, 95% CI 0.54-0.76, p &lt; 0.001). Benefit was observed across PD-L1 expression subgroups, though it was most pronounced in tumors with PD-L1 expression of 50% or greater. Grade 3 or higher immune-related adverse events occurred in 18% of the combination arm.</p>
+      </abstract>
+      <kwd-group>
+        <kwd>non-small cell lung cancer</kwd>
+        <kwd>PD-1</kwd>
+        <kwd>immune checkpoint inhibitor</kwd>
+        <kwd>pembrolizumab</kwd>
+        <kwd>overall survival</kwd>
+      </kwd-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec>
+      <title>Introduction</title>
+      <p>Lung cancer remains the leading cause of cancer-related mortality worldwide, with non-small cell lung cancer accounting for roughly 85% of cases. The introduction of immune checkpoint inhibitors targeting the PD-1/PD-L1 axis has meaningfully improved outcomes for patients with advanced disease, particularly those lacking targetable driver mutations such as EGFR or ALK alterations. Early trials established the efficacy of checkpoint inhibitors as monotherapy in PD-L1-high tumors, but many patients present with lower PD-L1 expression, raising interest in combination strategies with cytotoxic chemotherapy.</p>
+    </sec>
+    <sec>
+      <title>Methods</title>
+      <p>This multicenter, double-blind, placebo-controlled phase III trial randomized 580 patients with stage IV NSCLC and no EGFR/ALK alterations, in a 1:1 ratio, to receive pembrolizumab plus platinum-doublet chemotherapy or placebo plus the same chemotherapy backbone. Randomization was stratified by PD-L1 tumor proportion score (less than 1%, 1-49%, and 50% or greater) and histology. The primary endpoint was overall survival; secondary endpoints included progression-free survival and objective response rate.</p>
+    </sec>
+    <sec>
+      <title>Results</title>
+      <p>At a median follow-up of 31 months, median overall survival was 22.1 months in the pembrolizumab-combination arm compared with 13.4 months in the chemotherapy-alone arm (HR 0.64; p &lt; 0.001). This survival benefit was consistent across PD-L1 subgroups but was numerically greatest among patients with PD-L1 expression of 50% or higher (median OS not reached vs. 12.8 months). Objective response rate was 48% in the combination arm vs. 27% with chemotherapy alone. Immune-related adverse events of grade 3 or higher, most commonly pneumonitis and colitis, occurred in 18% of patients receiving pembrolizumab.</p>
+    </sec>
+    <sec>
+      <title>Discussion</title>
+      <p>Adding pembrolizumab to first-line chemotherapy provides a substantial and durable overall survival benefit for patients with advanced NSCLC regardless of PD-L1 status, confirming and extending earlier progression-free survival findings. The safety profile is consistent with the known immune-related toxicity of checkpoint inhibitors and requires proactive monitoring. These results support combination immunochemotherapy as a standard first-line option in this population.</p>
+    </sec>
+  </body>
+</article>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article article-type="research-article" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">Hypertens Res</journal-id>
+      <journal-title-group><journal-title>Hypertension Research Reports</journal-title></journal-title-group>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="pmc">PMC_sample_004</article-id>
+      <article-id pub-id-type="pmid">30000004</article-id>
+      <title-group>
+        <article-title>Dietary Sodium Reduction and Ambulatory Blood Pressure in Adults with Resistant Hypertension</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author"><name><surname>Novak</surname><given-names>P.</given-names></name></contrib>
+        <contrib contrib-type="author"><name><surname>Osei</surname><given-names>B.</given-names></name></contrib>
+      </contrib-group>
+      <pub-date pub-type="epub"><year>2020</year></pub-date>
+      <abstract>
+        <p>Resistant hypertension, defined as blood pressure above goal despite three or more antihypertensive agents including a diuretic, affects a substantial minority of treated hypertensive patients and is associated with elevated cardiovascular risk. Excess dietary sodium intake is a modifiable contributor. We conducted a crossover trial in 96 adults with confirmed resistant hypertension comparing a low-sodium diet (target &lt;100 mmol/day) with usual diet, each for six weeks with a two-week washout. Mean 24-hour ambulatory systolic blood pressure fell by 9.7 mmHg on the low-sodium diet relative to usual diet (p &lt; 0.001), with a smaller but significant reduction in diastolic pressure. Effects were largest in participants classified as salt-sensitive based on prior testing.</p>
+      </abstract>
+      <kwd-group>
+        <kwd>resistant hypertension</kwd>
+        <kwd>sodium restriction</kwd>
+        <kwd>ambulatory blood pressure</kwd>
+        <kwd>salt sensitivity</kwd>
+      </kwd-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec>
+      <title>Introduction</title>
+      <p>Resistant hypertension carries a markedly higher risk of stroke, myocardial infarction, and chronic kidney disease compared with hypertension that responds to standard pharmacotherapy. Although additional antihypertensive medications are frequently added, dietary sodium restriction is an underused non-pharmacologic strategy that can meaningfully lower blood pressure, particularly in salt-sensitive individuals. Prior smaller studies suggested benefit, but ambulatory blood pressure data, which better predict cardiovascular outcomes than office measurements, were limited.</p>
+    </sec>
+    <sec>
+      <title>Methods</title>
+      <p>Ninety-six adults with resistant hypertension, confirmed by ambulatory monitoring and medication adherence review, were enrolled in a randomized crossover trial. Each participant completed a six-week low-sodium diet phase (dietary counseling plus provision of low-sodium staples, target intake &lt;100 mmol/day measured by 24-hour urine collection) and a six-week usual-diet phase, separated by a two-week washout, in randomized order. The primary outcome was change in mean 24-hour ambulatory systolic blood pressure.</p>
+    </sec>
+    <sec>
+      <title>Results</title>
+      <p>Mean measured sodium intake fell from 168 mmol/day at baseline to 84 mmol/day during the low-sodium phase. Twenty-four-hour ambulatory systolic blood pressure was 9.7 mmHg lower on the low-sodium diet compared with usual diet (p &lt; 0.001), and diastolic pressure was 4.1 mmHg lower (p = 0.002). Participants identified as salt-sensitive by baseline testing experienced roughly twice the systolic reduction of salt-resistant participants. No significant change in serum creatinine or potassium was observed.</p>
+    </sec>
+    <sec>
+      <title>Discussion</title>
+      <p>Dietary sodium restriction produced a clinically meaningful reduction in ambulatory blood pressure among adults with resistant hypertension, comparable in magnitude to adding a fourth antihypertensive drug in many patients. These findings support routine, structured dietary counseling as a component of managing resistant hypertension, especially for patients identified as salt-sensitive. Longer-term studies are needed to determine whether sustained sodium restriction translates into reduced cardiovascular events.</p>
+    </sec>
+  </body>
+</article>
